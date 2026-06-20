@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api, { clearStoredAccessToken } from "../../api";
+import api from "../../api";
 import { roleHomePath, normalizeRole } from "../../utils/roleHome";
 import AppNavbar from "../../components/AppNavbar";
 import { HiPlus, HiCollection, HiOfficeBuilding, HiUsers, HiLocationMarker, HiClock, HiUpload, HiTrash, HiRefresh, HiCog, HiScissors, HiPencil } from "react-icons/hi";
@@ -69,9 +69,8 @@ export default function AdminResources() {
         try {
             await api.post("/auth/logout");
         } catch {
-            // Even if backend logout fails, clear local auth state and route to login.
+            // Even if backend logout fails, route user to login.
         } finally {
-            clearStoredAccessToken();
             navigate("/login", { replace: true });
         }
     };

@@ -14,30 +14,10 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByRefreshToken(String refreshToken);
+    Optional<User> findByEmailIgnoreCase(String email);
 
     Optional<User> findByPhoneNumber(String phoneNumber);
 
-    List<User> findAllByOrderByFirstnameAscLastNameAsc();
+    List<User> findByRole(Role role);
 
-    List<User> findByRoleOrderByFirstnameAscLastNameAsc(Role role);
-
-    List<User> findByFirstnameContainingIgnoreCaseOrderByFirstnameAscLastNameAsc(String firstname);
-
-    List<User> findByFirstnameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrderByFirstnameAscLastNameAsc(
-            String firstname,
-            String lastName,
-            String email
-    );
-
-    Optional<User> findFirstByFirstnameIgnoreCaseAndLastNameIgnoreCase(String firstname, String lastName);
-
-    List<User> findByFirstnameIgnoreCase(String firstname);
-
-    List<User> findByLastNameIgnoreCase(String lastName);
-
-    @Transactional
-    @Modifying
-    @Query("update User u set u.password = ?2 where u.email = ?1")
-    void updatePassword(String email, String password);
 }

@@ -6,3 +6,14 @@ smart-campus/pom.xml
 smart-campus/pom.xml
 smart-campus/pom.xml
 smart-campus/backend/run18080.log
+
+# Local secrets and machine-specific config
+.env
+.env.*
+!.env.example
+
+# Generated and runtime upload files
+/smart-campus/backend/target/
+/smart-campus/backend/uploads/
+/smart-campus/uploads/
+/uploads/

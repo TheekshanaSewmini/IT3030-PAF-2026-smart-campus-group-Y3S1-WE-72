@@ -4,6 +4,7 @@ package com.smartcampus.smart_campus.service;
 import com.smartcampus.smart_campus.dtos.AuthResponse;
 import com.smartcampus.smart_campus.dtos.UserDto;
 import com.smartcampus.smart_campus.entities.User;
+import com.smartcampus.smart_campus.enums.AuthProvider;
 import com.smartcampus.smart_campus.enums.Role;
 import com.smartcampus.smart_campus.enums.Token;
 import com.smartcampus.smart_campus.records.LoginRequest;
@@ -33,14 +34,19 @@ public class AuthServiceimpl implements AuthService {
 
     // Email validation
     private boolean isValidEmail(String email) {
-        return email != null && email.matches("^IT\\d+@my\\.sliit\\.lk$");
+        return email != null && email.matches("(?i)^IT\\d+@my\\.sliit\\.lk$");
+    }
+
+    private String normalizeEmail(String email) {
+        return email == null ? null : email.trim().toLowerCase(Locale.ROOT);
     }
 
     // Sign up
     @Override
     public AuthResponse signUp(UserDto.RegisterRequest request) {
+        String normalizedEmail = normalizeEmail(request.email());
 
-        if (!isValidEmail(request.email())) {
+        if (!isValidEmail(normalizedEmail)) {
             return AuthResponse.builder()
                     .message("Invalid email! Example: IT23687882@my.sliit.lk")
                     .success(false)
@@ -54,7 +60,7 @@ public class AuthServiceimpl implements AuthService {
                     .build();
         }
 
-        Optional<User> existing = userRepo.findByEmail(request.email());
+        Optional<User> existing = userRepo.findByEmailIgnoreCase(normalizedEmail);
 
         if (existing.isPresent() && existing.get().getIsVerified()) {
             return AuthResponse.builder()
@@ -67,12 +73,14 @@ public class AuthServiceimpl implements AuthService {
 
         user.setFirstname(request.firstname());
         user.setLastName(request.lastName());
-        user.setEmail(request.email());
+        user.setEmail(normalizedEmail);
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setPhoneNumber(request.phoneNumber());
         user.setTempEmail(request.tempEmail());
 
         user.setRole(request.role() != null ? request.role() : Role.USER);
+        user.setProvider(AuthProvider.LOCAL);
+        user.setProviderId(null);
         user.setYear(request.year());
         user.setSemester(request.semester());
 
@@ -127,8 +135,9 @@ public class AuthServiceimpl implements AuthService {
 
     @Override
     public AuthResponse signIn(LoginRequest request, HttpServletResponse response) {
+        String normalizedEmail = normalizeEmail(request.email());
 
-        User user = userRepo.findByEmail(request.email()).orElse(null);
+        User user = userRepo.findByEmailIgnoreCase(normalizedEmail).orElse(null);
 
         if (user == null) {
             return AuthResponse.builder()
@@ -147,7 +156,7 @@ public class AuthServiceimpl implements AuthService {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.email(),
+                            normalizedEmail,
                             request.password()
                     )
             );
@@ -160,7 +169,7 @@ public class AuthServiceimpl implements AuthService {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", user.getEmail());
-        claims.put("role", user.getRole());
+        claims.put("role", user.getRole().name());
 
         String accessToken = jwtUtils.generateToken(claims, user, response, Token.ACCESS);
         String refreshToken = jwtUtils.generateToken(claims, user, response, Token.REFRESH);
@@ -183,8 +192,9 @@ public class AuthServiceimpl implements AuthService {
     // Verify OTP
     @Override
     public AuthResponse verifyCode(String email, String code) {
+        String normalizedEmail = normalizeEmail(email);
 
-        User user = userRepo.findByEmail(email)
+        User user = userRepo.findByEmailIgnoreCase(normalizedEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (user.getIsVerified()) {
@@ -223,8 +233,9 @@ public class AuthServiceimpl implements AuthService {
     // Resend OTP
     @Override
     public AuthResponse resendOtp(String email) {
+        String normalizedEmail = normalizeEmail(email);
 
-        User user = userRepo.findByEmail(email)
+        User user = userRepo.findByEmailIgnoreCase(normalizedEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         int otp = (int) (Math.random() * 900000) + 100000;

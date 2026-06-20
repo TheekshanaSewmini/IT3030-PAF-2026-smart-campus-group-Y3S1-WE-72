@@ -1,18 +1,24 @@
 package com.smartcampus.smart_campus.service;
 
+import com.smartcampus.smart_campus.booking.repo.BookingRepository;
 import com.smartcampus.smart_campus.dtos.UserDto;
 import com.smartcampus.smart_campus.entities.ForgotPassword;
 import com.smartcampus.smart_campus.entities.User;
+import com.smartcampus.smart_campus.enums.AuthProvider;
+import com.smartcampus.smart_campus.notification.repo.NotificationRepository;
 import com.smartcampus.smart_campus.records.MailBody;
 import com.smartcampus.smart_campus.repo.ForgotPasswordRepository;
 import com.smartcampus.smart_campus.repo.UserRepo;
 import com.smartcampus.smart_campus.utils.EmailUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -22,12 +28,14 @@ public class UserProfileServiceImpl implements UserProfileService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
     private final ForgotPasswordRepository forgotPasswordRepository;
+    private final BookingRepository bookingRepository;
+    private final NotificationRepository notificationRepository;
     private final EmailUtils emailUtils;
 
     // Current user
     @Override
     public User getCurrentUser(String email) {
-        return userRepo.findByEmail(email)
+        return userRepo.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
@@ -35,12 +43,19 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Transactional
     @Override
     public void deleteAccount(User user, UserDto.DeleteAccountDto dto) {
+        if (requiresPasswordForDelete(user)) {
+            String currentPassword = dto != null ? dto.currentPassword() : null;
 
-        if (!passwordEncoder.matches(dto.currentPassword(), user.getPassword())) {
-            throw new RuntimeException("Current password is incorrect");
+            if (currentPassword == null || currentPassword.isBlank()) {
+                throw new RuntimeException("Current password is required");
+            }
+
+            if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+                throw new RuntimeException("Current password is incorrect");
+            }
         }
 
-        userRepo.delete(user);
+        deleteUserWithDependencies(user);
     }
 
     // Request delete OTP
@@ -84,8 +99,7 @@ public class UserProfileServiceImpl implements UserProfileService {
             throw new RuntimeException("OTP expired");
         }
 
-        userRepo.delete(user);
-        forgotPasswordRepository.delete(fp);
+        deleteUserWithDependencies(user);
     }
 
     // Update name
@@ -104,15 +118,57 @@ public class UserProfileServiceImpl implements UserProfileService {
         );
     }
 
+    @Transactional
+    @Override
+    public UserDto.UserProfileDto updateProfileDetails(User user, UserDto.UpdateProfileDetailsDto dto) {
+        if (dto == null) {
+            throw new RuntimeException("Profile data is required");
+        }
+
+        if (dto.phoneNumber() != null) {
+            String updatedPhone = dto.phoneNumber().trim();
+            if (updatedPhone.isBlank()) {
+                throw new RuntimeException("Phone number cannot be blank");
+            }
+
+            Optional<User> existingPhoneOwner = userRepo.findByPhoneNumber(updatedPhone);
+            if (existingPhoneOwner.isPresent()
+                    && !existingPhoneOwner.get().getUserId().equals(user.getUserId())) {
+                throw new RuntimeException("Phone number already in use");
+            }
+
+            user.setPhoneNumber(updatedPhone);
+        }
+
+        if (dto.year() != null) {
+            user.setYear(dto.year());
+        }
+
+        if (dto.semester() != null) {
+            user.setSemester(dto.semester());
+        }
+
+        return toUserProfileDto(userRepo.save(user));
+    }
+
     // Update email
     @Transactional
     @Override
     public UserDto.UpdateEmailDto updateEmail(User user, UserDto.UpdateEmailDto dto) {
 
-        String newEmail = dto.newEmail();
+        String newEmail = dto.newEmail().trim();
 
-        if (userRepo.findByEmail(newEmail).isPresent()) {
-            throw new RuntimeException("Email already in use");
+        if (newEmail.equalsIgnoreCase(user.getEmail())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "New email must be different from current email"
+            );
+        }
+
+        Optional<User> existingUser = userRepo.findByEmailIgnoreCase(newEmail);
+        if (existingUser.isPresent()
+                && !existingUser.get().getUserId().equals(user.getUserId())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
 
         int otp = new Random().nextInt(900000) + 100000;
@@ -182,9 +238,13 @@ public class UserProfileServiceImpl implements UserProfileService {
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        int unreadNotifications = Math.toIntExact(
+                notificationRepository.countByUserUserIdAndReadFalse(userId)
+        );
+
         return new UserDto.UserHomeDto(
                 "Welcome back, " + user.getFirstname() + "!",
-                3,
+                unreadNotifications,
                 5
         );
     }
@@ -196,12 +256,17 @@ public class UserProfileServiceImpl implements UserProfileService {
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        return toUserProfileDto(user);
+    }
+
+    private UserDto.UserProfileDto toUserProfileDto(User user) {
         return new UserDto.UserProfileDto(
                 user.getUserId(),
                 user.getFirstname(),
                 user.getEmail(),
                 user.getLastName(),
                 user.getRole(),
+                user.getProvider(),
                 user.getPhoneNumber(),
                 user.getTempEmail(),
                 user.getImageUrl(),
@@ -209,5 +274,20 @@ public class UserProfileServiceImpl implements UserProfileService {
                 user.getYear(),
                 user.getSemester()
         );
+    }
+
+    private boolean requiresPasswordForDelete(User user) {
+        AuthProvider provider = user.getProvider();
+        return provider == null || provider == AuthProvider.LOCAL;
+    }
+
+    private void deleteUserWithDependencies(User user) {
+        forgotPasswordRepository.deleteByUser(user);
+        bookingRepository.deleteByBookedByUserId(user.getUserId());
+        notificationRepository.deleteByUserUserId(user.getUserId());
+
+        user.setRefreshToken(null);
+        userRepo.save(user);
+        userRepo.delete(user);
     }
 }

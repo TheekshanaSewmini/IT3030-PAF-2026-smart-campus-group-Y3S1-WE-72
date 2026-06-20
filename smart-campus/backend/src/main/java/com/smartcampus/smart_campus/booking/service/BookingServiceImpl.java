@@ -9,6 +9,7 @@ import com.smartcampus.smart_campus.catalog.enums.FacilityAssetStatus;
 import com.smartcampus.smart_campus.catalog.repo.FacilityAssetRepository;
 import com.smartcampus.smart_campus.entities.User;
 import com.smartcampus.smart_campus.enums.Role;
+import com.smartcampus.smart_campus.notification.service.NotificationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,7 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final FacilityAssetRepository facilityAssetRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     @Override
@@ -64,7 +66,9 @@ public class BookingServiceImpl implements BookingService {
                 .bookedBy(user)
                 .build();
 
-        return toResponse(bookingRepository.save(booking));
+        Booking savedBooking = bookingRepository.save(booking);
+        notificationService.createAdminNotificationForNewBooking(savedBooking);
+        return toResponse(savedBooking);
     }
 
     @Transactional
@@ -275,7 +279,9 @@ public class BookingServiceImpl implements BookingService {
         );
 
         booking.setStatus(BookingStatus.APPROVED);
-        return toResponse(bookingRepository.save(booking));
+        Booking savedBooking = bookingRepository.save(booking);
+        notificationService.createBookingDecisionNotification(savedBooking, BookingStatus.APPROVED);
+        return toResponse(savedBooking);
     }
 
     @Transactional
@@ -288,7 +294,9 @@ public class BookingServiceImpl implements BookingService {
         }
 
         booking.setStatus(BookingStatus.REJECTED);
-        return toResponse(bookingRepository.save(booking));
+        Booking savedBooking = bookingRepository.save(booking);
+        notificationService.createBookingDecisionNotification(savedBooking, BookingStatus.REJECTED);
+        return toResponse(savedBooking);
     }
 
     private Booking getBookingById(Long bookingId) {

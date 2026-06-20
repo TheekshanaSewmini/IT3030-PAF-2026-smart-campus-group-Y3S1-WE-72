@@ -1,45 +1,55 @@
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\booking\controller\BookingController.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\booking\dtos\BookingDto.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\booking\entities\Booking.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\booking\enums\BookingStatus.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\booking\repo\BookingRepository.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\booking\service\BookingService.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\booking\service\BookingServiceImpl.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\controller\FacilityAssetController.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\dtos\FacilityAssetDto.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\entities\FacilityAsset.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\enums\FacilityAssetStatus.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\enums\FacilityAssetType.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\repo\FacilityAssetRepository.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\service\FacilityAssetService.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\service\FacilityAssetServiceImpl.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\config\WebConfig.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\controller\AuthController.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\controller\ForgotPasswordController.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\controller\UserController.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\dtos\AuthResponse.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\dtos\UserDto.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\entities\ForgotPassword.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\entities\User.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\enums\RecoveryChannel.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\enums\Role.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\enums\Semester.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\enums\Token.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\enums\Year.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\records\LoginRequest.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\records\MailBody.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\repo\ForgotPasswordRepository.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\repo\UserRepo.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\security\AuthConfig.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\security\JWTAuthFilter.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\security\SecurityConfig.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\service\AuthService.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\service\AuthServiceimpl.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\service\EmailService.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\service\ForgotPasswordService.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\service\ForgotPasswordServiceImpl.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\service\UserProfileService.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\service\UserProfileServiceImpl.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\SmartCampusApplication.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\utils\EmailUtils.java
-D:\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\utils\JwtUtils.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\booking\controller\BookingController.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\booking\dtos\BookingDto.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\booking\entities\Booking.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\booking\enums\BookingStatus.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\booking\repo\BookingRepository.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\booking\service\BookingService.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\booking\service\BookingServiceImpl.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\controller\FacilityAssetController.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\dtos\FacilityAssetDto.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\entities\FacilityAsset.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\enums\FacilityAssetStatus.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\enums\FacilityAssetType.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\repo\FacilityAssetRepository.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\service\FacilityAssetService.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\catalog\service\FacilityAssetServiceImpl.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\config\WebConfig.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\controller\AuthController.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\controller\ForgotPasswordController.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\controller\UserController.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\dtos\AuthResponse.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\dtos\UserDto.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\entities\ForgotPassword.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\entities\User.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\enums\AuthProvider.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\enums\RecoveryChannel.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\enums\Role.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\enums\Semester.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\enums\Token.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\enums\Year.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\notification\controller\NotificationController.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\notification\dtos\NotificationDto.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\notification\entities\Notification.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\notification\enums\NotificationType.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\notification\repo\NotificationRepository.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\notification\service\NotificationService.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\notification\service\NotificationServiceImpl.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\records\LoginRequest.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\records\MailBody.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\repo\ForgotPasswordRepository.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\repo\UserRepo.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\security\AuthConfig.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\security\JWTAuthFilter.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\security\OAuth2SuccessHandler.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\security\OAuth2UserService.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\security\SecurityConfig.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\service\AuthService.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\service\AuthServiceimpl.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\service\EmailService.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\service\ForgotPasswordService.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\service\ForgotPasswordServiceImpl.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\service\UserProfileService.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\service\UserProfileServiceImpl.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\SmartCampusApplication.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\utils\EmailUtils.java
+C:\Users\MSI\Documents\damsi git\IT3030-PAF-2026-smart-campus-group-WE-141-3.1\smart-campus\backend\src\main\java\com\smartcampus\smart_campus\utils\JwtUtils.java

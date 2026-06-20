@@ -52,19 +52,6 @@ export default function Dashboard() {
 
         loadDashboard();
     }, [navigate]);
-
-    const handleLogout = async () => {
-        try {
-            // Call logout endpoint to clear cookies on backend
-            await api.post("/auth/logout", {}, { withCredentials: true });
-        } catch (err) {
-            console.log("Logout error:", err.message);
-        } finally {
-            // Redirect to login regardless of API result
-            navigate("/login", { replace: true });
-        }
-    };
-
     if (!homeData && !error) {
         return (
             <div className="loading-center">
@@ -84,31 +71,30 @@ export default function Dashboard() {
                     title="Dashboard"
                     subtitle={homeData?.welcomeMessage || "Overview panel."}
                     profile={profile}
-                    onLogout={handleLogout}
                 />
 
                 {error && <p className="message error">{error}</p>}
 
                 {!error && (
                     <>
-                        <div className="stats">
-                            <article className="stat-card">
-                                <h3>Notifications</h3>
-                                <p className="value">{homeData?.notifications ?? 0}</p>
+                        <div className="stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+                            <article className="stat-card glass-card">
+                                <h3 style={{ fontSize: '0.9rem', color: 'var(--text-soft)', margin: '0 0 0.5rem' }}>Notifications</h3>
+                                <p className="value" style={{ fontSize: '2rem', fontWeight: 800 }}>{homeData?.notifications ?? 0}</p>
                             </article>
-                            <article className="stat-card">
-                                <h3>Tasks</h3>
-                                <p className="value">{homeData?.tasks ?? 0}</p>
+                            <article className="stat-card glass-card">
+                                <h3 style={{ fontSize: '0.9rem', color: 'var(--text-soft)', margin: '0 0 0.5rem' }}>Tasks</h3>
+                                <p className="value" style={{ fontSize: '2rem', fontWeight: 800 }}>{homeData?.tasks ?? 0}</p>
                             </article>
-                            <article className="stat-card">
-                                <h3>Current Role</h3>
-                                <p className="value">{roleLabel}</p>
+                            <article className="stat-card glass-card">
+                                <h3 style={{ fontSize: '0.9rem', color: 'var(--text-soft)', margin: '0 0 0.5rem' }}>Current Role</h3>
+                                <p className="value" style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--brand)' }}>{roleLabel}</p>
                             </article>
                         </div>
 
-                        <section className="section">
-                            <h3>Admin Quick Actions</h3>
-                            <div className="actions-row">
+                        <section className="dashboard-actions glass-panel" style={{ padding: '2rem' }}>
+                            <h3 style={{ marginTop: 0, marginBottom: '1.5rem' }}>Admin Quick Actions</h3>
+                            <div className="actions-row" style={{ display: 'flex', gap: '1rem' }}>
                                 <Link className="btn btn-primary" to="/admin/resources">Add Resource</Link>
                                 <Link className="btn btn-secondary" to="/profile">Manage Profile</Link>
                                 <Link className="btn btn-secondary" to="/settings">User Settings</Link>

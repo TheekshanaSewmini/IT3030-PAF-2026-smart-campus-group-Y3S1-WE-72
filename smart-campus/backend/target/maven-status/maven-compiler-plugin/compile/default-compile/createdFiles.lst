@@ -1,9 +1,13 @@
 com\smartcampus\smart_campus\enums\Year.class
+com\smartcampus\smart_campus\security\OAuth2UserService.class
 com\smartcampus\smart_campus\dtos\UserDto.class
 com\smartcampus\smart_campus\catalog\dtos\FacilityAssetDto$UpdateRequest.class
 com\smartcampus\smart_campus\enums\RecoveryChannel.class
 com\smartcampus\smart_campus\booking\dtos\BookingDto$TimeSlot.class
+com\smartcampus\smart_campus\notification\dtos\NotificationDto$UnreadCountResponse.class
 com\smartcampus\smart_campus\catalog\service\FacilityAssetService.class
+com\smartcampus\smart_campus\notification\enums\NotificationType.class
+com\smartcampus\smart_campus\notification\service\NotificationServiceImpl.class
 com\smartcampus\smart_campus\records\LoginRequest.class
 com\smartcampus\smart_campus\booking\dtos\BookingDto$AvailableResourceResponse.class
 com\smartcampus\smart_campus\booking\dtos\BookingDto$BookedSlotResponse.class
@@ -13,6 +17,7 @@ com\smartcampus\smart_campus\catalog\entities\FacilityAsset.class
 com\smartcampus\smart_campus\dtos\UserDto$DeleteAccountForgotVerifyDto.class
 com\smartcampus\smart_campus\booking\dtos\BookingDto$UpdateBookingRequest.class
 com\smartcampus\smart_campus\records\MailBody.class
+com\smartcampus\smart_campus\enums\AuthProvider.class
 com\smartcampus\smart_campus\dtos\UserDto$UpdateNameDto.class
 com\smartcampus\smart_campus\dtos\UserDto$UserHomeDto.class
 com\smartcampus\smart_campus\booking\entities\Booking.class
@@ -31,6 +36,7 @@ com\smartcampus\smart_campus\booking\service\BookingService.class
 com\smartcampus\smart_campus\enums\Role.class
 com\smartcampus\smart_campus\booking\controller\BookingController.class
 com\smartcampus\smart_campus\catalog\dtos\FacilityAssetDto$Response.class
+com\smartcampus\smart_campus\notification\repo\NotificationRepository.class
 com\smartcampus\smart_campus\service\AuthService.class
 com\smartcampus\smart_campus\entities\User$UserBuilder.class
 com\smartcampus\smart_campus\enums\Semester.class
@@ -40,6 +46,8 @@ com\smartcampus\smart_campus\catalog\entities\FacilityAsset$FacilityAssetBuilder
 com\smartcampus\smart_campus\dtos\UserDto$RegisterRequest.class
 com\smartcampus\smart_campus\config\WebConfig.class
 com\smartcampus\smart_campus\utils\JwtUtils.class
+com\smartcampus\smart_campus\notification\controller\NotificationController.class
+com\smartcampus\smart_campus\security\OAuth2SuccessHandler.class
 com\smartcampus\smart_campus\booking\dtos\BookingDto$ResourceAvailabilityResponse.class
 com\smartcampus\smart_campus\entities\ForgotPassword$ForgotPasswordBuilder.class
 com\smartcampus\smart_campus\utils\EmailUtils.class
@@ -49,7 +57,9 @@ com\smartcampus\smart_campus\utils\JwtUtils$1.class
 com\smartcampus\smart_campus\booking\enums\BookingStatus.class
 com\smartcampus\smart_campus\security\AuthConfig.class
 com\smartcampus\smart_campus\service\UserProfileServiceImpl.class
+com\smartcampus\smart_campus\notification\dtos\NotificationDto$NotificationResponse.class
 com\smartcampus\smart_campus\catalog\dtos\FacilityAssetDto.class
+com\smartcampus\smart_campus\notification\entities\Notification.class
 com\smartcampus\smart_campus\service\UserProfileService.class
 com\smartcampus\smart_campus\booking\dtos\BookingDto$BookingResponse.class
 com\smartcampus\smart_campus\controller\UserController.class
@@ -59,8 +69,10 @@ com\smartcampus\smart_campus\dtos\AuthResponse.class
 com\smartcampus\smart_campus\catalog\dtos\FacilityAssetDto$CreateRequest.class
 com\smartcampus\smart_campus\dtos\UserDto$UpdateEmailDto.class
 com\smartcampus\smart_campus\service\EmailService.class
+com\smartcampus\smart_campus\notification\entities\Notification$NotificationBuilder.class
 com\smartcampus\smart_campus\service\AuthServiceimpl.class
 com\smartcampus\smart_campus\enums\Token.class
+com\smartcampus\smart_campus\dtos\UserDto$UpdateProfileDetailsDto.class
 com\smartcampus\smart_campus\booking\dtos\BookingDto$CreateBookingRequest.class
 com\smartcampus\smart_campus\catalog\service\FacilityAssetServiceImpl.class
 com\smartcampus\smart_campus\booking\repo\BookingRepository.class
@@ -69,5 +81,7 @@ com\smartcampus\smart_campus\records\MailBody$MailBodyBuilder.class
 com\smartcampus\smart_campus\SmartCampusApplication.class
 com\smartcampus\smart_campus\dtos\UserDto$DeleteAccountForgotRequest.class
 com\smartcampus\smart_campus\security\SecurityConfig.class
+com\smartcampus\smart_campus\notification\dtos\NotificationDto.class
+com\smartcampus\smart_campus\notification\service\NotificationService.class
 com\smartcampus\smart_campus\service\ForgotPasswordServiceImpl.class
 com\smartcampus\smart_campus\entities\User.class

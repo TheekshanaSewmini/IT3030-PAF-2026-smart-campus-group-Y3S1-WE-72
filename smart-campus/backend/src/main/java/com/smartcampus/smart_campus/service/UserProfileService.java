@@ -15,6 +15,8 @@ public interface UserProfileService {
     // Name
     UserDto.UpdateNameDto updateName(User user, UserDto.UpdateNameDto dto);
 
+    UserDto.UserProfileDto updateProfileDetails(User user, UserDto.UpdateProfileDetailsDto dto);
+
     // Email
     UserDto.UpdateEmailDto updateEmail(User user, UserDto.UpdateEmailDto dto);
 

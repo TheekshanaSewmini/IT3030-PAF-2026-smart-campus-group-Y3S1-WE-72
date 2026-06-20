@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { Link, useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { HiArrowRight, HiLockClosed, HiRefresh, HiShieldCheck } from "react-icons/hi";
 import api from "../../api";
+import styles from "./AuthUi.module.css";
 
 export default function VerifyOtp() {
     const navigate = useNavigate();
@@ -37,7 +39,6 @@ export default function VerifyOtp() {
                 return;
             }
 
-            // Email stored in backend cookie, no localStorage cleanup needed
             setSuccess("Account verified successfully.");
             navigate("/login");
         } catch (err) {
@@ -69,45 +70,60 @@ export default function VerifyOtp() {
     };
 
     return (
-        <div className="page-shell">
-            <div className="bg-layer bg-auth" />
-            <div className="glass-card auth-card">
-                <h1 className="brand">Verify Account</h1>
-                <p className="subtitle">
-                    Enter the OTP sent to {emailHint || "your email"}.
-                </p>
+        <div className={styles.screen}>
+            <main className={`${styles.shell} ${styles.centered} ${styles.authRoute}`}>
+                <section className={`${styles.card} ${styles.cardCompact} ${styles.glass}`}>
+                    <div className={styles.centerText}>
+                        <div className={styles.headerIcon} style={{ margin: "0 auto 0.9rem" }}>
+                            <HiShieldCheck size={24} />
+                        </div>
+                        <p className={styles.eyebrow}>Security Verify</p>
+                        <h1 className={styles.title}>Confirm OTP</h1>
+                        <p className={styles.subtitle}>
+                            Enter the 6-digit code sent to <strong>{emailHint || "your email"}</strong>.
+                        </p>
+                    </div>
 
-                {error && <p className="message error">{error}</p>}
-                {success && <p className="message success">{success}</p>}
+                    {error && <div className={`${styles.notice} ${styles.noticeError}`}>{error}</div>}
+                    {success && <div className={`${styles.notice} ${styles.noticeSuccess}`}>{success}</div>}
 
-                <form className="form-grid" onSubmit={handleVerify}>
-                    <label className="field">
-                        <span>Verification Code</span>
-                        <input
-                            value={otp}
-                            onChange={(event) => setOtp(event.target.value)}
-                            placeholder="6-digit OTP"
-                            required
-                        />
-                    </label>
+                    <form className={styles.form} onSubmit={handleVerify}>
+                        <label className={styles.field}>
+                            <span className={styles.label}>One-Time Password</span>
+                            <div className={styles.inputWrap}>
+                                <HiLockClosed className={styles.inputIcon} size={18} />
+                                <input
+                                    className={`${styles.input} ${styles.inputPadded} ${styles.otpInput}`}
+                                    value={otp}
+                                    onChange={(event) => setOtp(event.target.value)}
+                                    placeholder="000000"
+                                    required
+                                    maxLength={6}
+                                />
+                            </div>
+                        </label>
 
-                    <button className="btn btn-primary" type="submit" disabled={loading}>
-                        {loading ? "Verifying..." : "Verify"}
-                    </button>
-                </form>
+                        <button className={styles.primaryBtn} type="submit" disabled={loading}>
+                            {loading ? "Verifying..." : "Verify Account"}
+                        </button>
+                    </form>
 
-                <div className="actions-row">
-                    <button
-                        className="btn btn-secondary"
-                        type="button"
-                        onClick={handleResend}
-                        disabled={resending}
-                    >
-                        {resending ? "Resending..." : "Resend OTP"}
-                    </button>
-                    <Link className="btn btn-ghost" to="/login">Back to Login</Link>
-                </div>
-            </div>
+                    <div className={styles.stackActions} style={{ marginTop: "0.9rem" }}>
+                        <button
+                            className={styles.secondaryBtn}
+                            type="button"
+                            onClick={handleResend}
+                            disabled={resending}
+                        >
+                            <HiRefresh style={{ marginRight: "0.4rem", verticalAlign: "middle" }} />
+                            {resending ? "Resending..." : "Resend OTP"}
+                        </button>
+                        <div className={styles.footText}>
+                            <Link className={styles.link} to="/login">Back to login</Link>
+                        </div>
+                    </div>
+                </section>
+            </main>
         </div>
     );
 }

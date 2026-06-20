@@ -1,9 +1,9 @@
 package com.smartcampus.smart_campus.utils;
 
 import com.smartcampus.smart_campus.records.MailBody;
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -13,9 +13,11 @@ import org.springframework.stereotype.Component;
 public class EmailUtils {
 
     private final JavaMailSender javaMailSender;
+    private final String fromAddress;
 
-    public EmailUtils(JavaMailSender javaMailSender) {
+    public EmailUtils(JavaMailSender javaMailSender, @Value("${spring.mail.username}") String fromAddress) {
         this.javaMailSender = javaMailSender;
+        this.fromAddress = fromAddress;
     }
 
     // Send HTML email using configured mail sender
@@ -25,7 +27,7 @@ public class EmailUtils {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setTo(mailBody.to());
-            helper.setFrom("no-reply@yourapp.com");
+            helper.setFrom(fromAddress);
             helper.setSubject(mailBody.subject());
             helper.setText(mailBody.text(), true);
 
@@ -33,8 +35,9 @@ public class EmailUtils {
 
             log.info("Email sent successfully to {}", mailBody.to());
 
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             log.error("Failed to send email to {}: {}", mailBody.to(), e.getMessage());
+            throw new RuntimeException("Email sending failed", e);
         }
     }
 }

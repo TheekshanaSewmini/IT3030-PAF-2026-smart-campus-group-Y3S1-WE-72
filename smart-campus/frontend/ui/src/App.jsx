@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Login from "./pages/auth/Login.jsx";
 import Signup from "./pages/auth/Signup.jsx";
+import OAuthSuccess from "./pages/auth/OAuthSuccess.jsx";
 import VerifyOtp from "./pages/auth/VerifyOtp.jsx";
 import ForgotPassword from "./pages/user/ForgotPassword.jsx";
 import Home from "./pages/user/Home.jsx";
@@ -11,14 +12,18 @@ import Profile from "./pages/user/Profile.jsx";
 import Settings from "./pages/user/Settings.jsx";
 import AdminResources from "./pages/user/AdminResources.jsx";
 import Booking from "./pages/user/Booking.jsx";
+import LaunchPage from "./pages/public/LaunchPage.jsx";
+import PrivacyPolicy from "./pages/public/PrivacyPolicy.jsx";
 
 export default function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Navigate to="/login" replace />} />
+                <Route path="/" element={<LaunchPage />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/oauth-success" element={<OAuthSuccess />} />
                 <Route path="/verify" element={<VerifyOtp />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
 
@@ -31,7 +36,7 @@ export default function App() {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/booking" element={<Booking />} />
 
-                <Route path="*" element={<Navigate to="/login" replace />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </BrowserRouter>
     );

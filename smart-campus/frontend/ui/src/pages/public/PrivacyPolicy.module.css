@@ -1,0 +1,282 @@
+.page {
+    min-height: 100vh;
+    padding: 1.1rem 1rem 2.2rem;
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(191, 219, 254, 0.28) 0, transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(125, 211, 252, 0.26) 0, transparent 42%),
+        linear-gradient(162deg, #f8fbff 0%, #eef4fb 52%, #e8f0f8 100%);
+}
+
+.page::before {
+    content: "";
+    position: absolute;
+    left: -120px;
+    top: -120px;
+    width: 330px;
+    height: 280px;
+    border-radius: 52% 48% 42% 58% / 47% 44% 56% 53%;
+    background:
+        radial-gradient(circle at 26% 24%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 56%),
+        repeating-linear-gradient(132deg, rgba(59, 130, 246, 0.14) 0 1px, transparent 1px 12px),
+        linear-gradient(146deg, rgba(191, 219, 254, 0.56), rgba(147, 197, 253, 0.3));
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    opacity: 0.9;
+    transform: rotate(-12deg);
+    pointer-events: none;
+}
+
+.grain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.34;
+}
+
+.header {
+    position: relative;
+    z-index: 1;
+    max-width: 980px;
+    margin: 0 auto 1rem;
+    padding: 0.82rem 0.94rem;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.92);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    backdrop-filter: blur(8px);
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.58rem;
+    color: #0f172a;
+    font-family: "Outfit", "Poppins", sans-serif;
+    font-weight: 800;
+    font-size: 1.08rem;
+}
+
+.brandIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    color: #ffffff;
+    background: linear-gradient(148deg, #1d4ed8, #3b82f6);
+    box-shadow: 0 10px 20px rgba(29, 78, 216, 0.34);
+}
+
+.headerActions {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.headerActions a {
+    padding: 0.5rem 0.74rem;
+    border-radius: 10px;
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: #1e293b;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.headerActions a:hover {
+    background: rgba(37, 99, 235, 0.11);
+    color: #1d4ed8;
+}
+
+.signupBtn {
+    color: #ffffff !important;
+    background: linear-gradient(145deg, #1d4ed8, #2563eb);
+}
+
+.main {
+    position: relative;
+    z-index: 1;
+    max-width: 980px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1rem;
+}
+
+.hero {
+    border-radius: 22px;
+    padding: 1.45rem 1.25rem;
+    background: rgba(255, 255, 255, 0.84);
+    border: 1px solid rgba(255, 255, 255, 0.92);
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+}
+
+.kicker {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.22rem 0.58rem;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.11);
+    color: #1d4ed8;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.hero h1 {
+    margin: 0.52rem 0 0;
+    color: #0f172a;
+    font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+    letter-spacing: -0.02em;
+}
+
+.hero p {
+    margin: 0.6rem 0 0;
+    color: #475569;
+    line-height: 1.62;
+    max-width: 64ch;
+    font-size: 0.93rem;
+}
+
+.meta {
+    margin-top: 0.7rem;
+    color: #1e3a8a;
+    font-size: 0.81rem;
+    font-weight: 700;
+}
+
+.content {
+    display: grid;
+    gap: 0.74rem;
+}
+
+.card {
+    border-radius: 18px;
+    padding: 1.1rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.86rem;
+    align-items: flex-start;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(37, 99, 235, 0.14);
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.07);
+}
+
+.cardIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    color: #1d4ed8;
+    background: #eff6ff;
+    border: 1px solid rgba(37, 99, 235, 0.18);
+}
+
+.card h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 1.08rem;
+}
+
+.card ul {
+    margin: 0.5rem 0 0;
+    padding-left: 1rem;
+    display: grid;
+    gap: 0.42rem;
+    color: #475569;
+    line-height: 1.52;
+    font-size: 0.9rem;
+}
+
+.footerCta {
+    border-radius: 20px;
+    padding: 1.2rem;
+    background:
+        linear-gradient(146deg, rgba(219, 234, 254, 0.6), rgba(255, 255, 255, 0.9)),
+        #ffffff;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+}
+
+.footerCta h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 1.24rem;
+}
+
+.footerCta p {
+    margin: 0.42rem 0 0;
+    color: #475569;
+    font-size: 0.92rem;
+}
+
+.footerActions {
+    margin-top: 0.82rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.56rem;
+}
+
+.primaryBtn,
+.secondaryBtn {
+    min-height: 40px;
+    border-radius: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.54rem 0.9rem;
+    font-size: 0.87rem;
+    font-weight: 700;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.primaryBtn {
+    color: #ffffff;
+    background: linear-gradient(145deg, #1d4ed8, #2563eb);
+}
+
+.secondaryBtn {
+    color: #1e3a8a;
+    background: #eff6ff;
+    border: 1px solid rgba(37, 99, 235, 0.24);
+}
+
+.primaryBtn:hover,
+.secondaryBtn:hover {
+    transform: translateY(-1px);
+}
+
+@media (max-width: 740px) {
+    .page {
+        padding: 0.85rem 0.7rem 1.3rem;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .headerActions {
+        width: 100%;
+    }
+
+    .hero,
+    .card,
+    .footerCta {
+        border-radius: 16px;
+        padding: 0.94rem;
+    }
+
+    .card {
+        grid-template-columns: 1fr;
+    }
+}
+

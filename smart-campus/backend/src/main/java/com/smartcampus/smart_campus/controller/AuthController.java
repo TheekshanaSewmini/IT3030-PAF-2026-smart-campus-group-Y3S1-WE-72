@@ -123,7 +123,7 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> getMe(
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        User user = userRepo.findByEmail(userDetails.getUsername())
+        User user = userRepo.findByEmailIgnoreCase(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Map<String, Object> response = new java.util.HashMap<>();
@@ -136,7 +136,7 @@ public class AuthController {
     // Refresh token
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response) {
-        String refreshToken = getCookie(request, "REFRESH");
+        String refreshToken = jwtUtils.getTokenFromCookie(request, Token.REFRESH);
 
         if (refreshToken == null || refreshToken.isBlank()) {
             return ResponseEntity.status(401).body(Map.of("message", "No refresh token"));
@@ -144,7 +144,7 @@ public class AuthController {
 
         try {
             String username = jwtUtils.extractUsername(refreshToken);
-            User user = userRepo.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
+            User user = userRepo.findByEmailIgnoreCase(username).orElseThrow(() -> new RuntimeException("User not found"));
 
             // Validate token and match stored refresh token
             if (jwtUtils.validateToken(refreshToken, user) && refreshToken.equals(user.getRefreshToken())) {

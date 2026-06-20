@@ -35,6 +35,14 @@ public class UserController {
         return ResponseEntity.ok("Name updated successfully");
     }
 
+    @PutMapping("/update-profile-details")
+    public ResponseEntity<UserDto.UserProfileDto> updateProfileDetails(
+            @AuthenticationPrincipal User loggedUser,
+            @RequestBody UserDto.UpdateProfileDetailsDto dto
+    ) {
+        return ResponseEntity.ok(userProfileService.updateProfileDetails(loggedUser, dto));
+    }
+
     // Update email
     @PutMapping("/update-email")
     public ResponseEntity<String> updateEmail(
@@ -90,7 +98,7 @@ public class UserController {
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteAccount(
             @AuthenticationPrincipal User loggedUser,
-            @Valid @RequestBody UserDto.DeleteAccountDto dto) {
+            @RequestBody(required = false) UserDto.DeleteAccountDto dto) {
 
         userProfileService.deleteAccount(loggedUser, dto);
         return ResponseEntity.ok("Account deleted successfully");

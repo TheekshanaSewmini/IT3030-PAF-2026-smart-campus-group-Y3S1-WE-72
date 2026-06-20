@@ -2,41 +2,18 @@ import axios from "axios";
 
 const configuredBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 const normalizedBaseUrl = configuredBaseUrl.replace(/\/+$/, "");
-const ACCESS_TOKEN_STORAGE_KEY = "smartcampus_access_token";
 
 const api = axios.create({
     baseURL: normalizedBaseUrl,
     withCredentials: true,
 });
 
-export const getStoredAccessToken = () => {
-    if (typeof window === "undefined") {
-        return "";
-    }
+export const getGoogleOAuthLoginUrl = () => `${normalizedBaseUrl}/oauth2/authorization/google`;
 
-    return window.localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY) || "";
-};
-
-export const setStoredAccessToken = (token) => {
-    if (typeof window === "undefined") {
-        return;
-    }
-
-    if (token && String(token).trim()) {
-        window.localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, String(token));
-        return;
-    }
-
-    window.localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
-};
-
-export const clearStoredAccessToken = () => {
-    if (typeof window === "undefined") {
-        return;
-    }
-
-    window.localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
-};
+// Keep these exported for backward compatibility with existing imports.
+export const getStoredAccessToken = () => "";
+export const setStoredAccessToken = () => {};
+export const clearStoredAccessToken = () => {};
 
 let isRefreshing = false;
 let failedQueue = [];
@@ -53,14 +30,6 @@ const processQueue = (error, token = null) => {
     failedQueue = [];
 };
 
-api.interceptors.request.use((config) => {
-    const token = getStoredAccessToken();
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});
-
 api.interceptors.response.use(
     (response) => response,
     async (error) => {
@@ -70,6 +39,7 @@ api.interceptors.response.use(
         const isAuthBootstrapRequest =
             requestUrl.includes("/auth/login") ||
             requestUrl.includes("/auth/register") ||
+            requestUrl.includes("/auth/check-phone") ||
             requestUrl.includes("/auth/verify-code") ||
             requestUrl.includes("/auth/resend-otp");
 
@@ -102,20 +72,11 @@ api.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                const refreshResponse = await api.post("/auth/refresh");
-                const refreshedAccessToken = refreshResponse?.data?.accessToken;
-
-                if (refreshedAccessToken) {
-                    setStoredAccessToken(refreshedAccessToken);
-                    originalRequest.headers = originalRequest.headers || {};
-                    originalRequest.headers.Authorization = `Bearer ${refreshedAccessToken}`;
-                }
-
-                processQueue(null, refreshedAccessToken || "refreshed");
+                await api.post("/auth/refresh");
+                processQueue(null, "refreshed");
                 return api(originalRequest);
             } catch (refreshError) {
                 processQueue(refreshError, null);
-                clearStoredAccessToken();
                 try {
                     await api.post("/auth/logout");
                 } catch {
@@ -164,6 +125,14 @@ export const bookingApi = {
     getAvailableResources: (params) => api.get("/booking/available-resources", { params }),
     getResourceAvailability: (facilityAssetId, params) =>
         api.get(`/booking/resources/${facilityAssetId}/availability`, { params }),
+};
+
+export const notificationApi = {
+    getMy: () => api.get("/notifications"),
+    getUnreadCount: () => api.get("/notifications/unread-count"),
+    markAsRead: (notificationId) => api.patch(`/notifications/${notificationId}/read`),
+    markAllAsRead: () => api.patch("/notifications/read-all"),
+    delete: (notificationId) => api.delete(`/notifications/${notificationId}`),
 };
 
 export default api;

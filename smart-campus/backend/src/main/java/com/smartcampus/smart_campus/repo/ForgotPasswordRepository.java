@@ -13,6 +13,8 @@ public interface ForgotPasswordRepository extends JpaRepository<ForgotPassword, 
 
 
     Optional<ForgotPassword> findByUser(User user);
+
+    void deleteByUser(User user);
 }
 
 

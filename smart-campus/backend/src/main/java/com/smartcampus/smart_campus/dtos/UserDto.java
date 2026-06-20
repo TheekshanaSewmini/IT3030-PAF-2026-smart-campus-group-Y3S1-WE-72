@@ -1,5 +1,6 @@
 package com.smartcampus.smart_campus.dtos;
 
+import com.smartcampus.smart_campus.enums.AuthProvider;
 import com.smartcampus.smart_campus.enums.Role;
 import com.smartcampus.smart_campus.enums.Semester;
 import com.smartcampus.smart_campus.enums.Year;
@@ -46,7 +47,6 @@ public class UserDto {
     ) {}
 
     public record DeleteAccountDto(
-            @NotBlank(message = "Current password is required")
             String currentPassword
     ) {}
 
@@ -84,6 +84,12 @@ public class UserDto {
             String confirmPassword
     ) {}
 
+    public record UpdateProfileDetailsDto(
+            String phoneNumber,
+            Year year,
+            Semester semester
+    ) {}
+
     public record UserHomeDto(
             String welcomeMessage,
             int notifications,
@@ -96,6 +102,7 @@ public class UserDto {
             String email,
             String lastName,
             Role role,
+            AuthProvider provider,
             String phoneNumber,
             String tempEmail,
             String profileImageUrl,

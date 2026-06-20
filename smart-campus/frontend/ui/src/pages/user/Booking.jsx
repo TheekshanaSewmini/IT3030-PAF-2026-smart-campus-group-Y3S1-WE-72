@@ -8,8 +8,32 @@ import { normalizeRole } from "../../utils/roleHome";
 function getErrorMessage(error, fallback) {
     const payload = error?.response?.data;
     if (typeof payload === "string" && payload.trim()) return payload;
+    if (Array.isArray(payload?.errors) && payload.errors.length > 0) {
+        const firstError = payload.errors[0];
+        if (typeof firstError === "string" && firstError.trim()) return firstError;
+        if (firstError?.defaultMessage) return firstError.defaultMessage;
+        if (firstError?.message) return firstError.message;
+    }
+    if (payload?.detail) return payload.detail;
     if (payload?.message) return payload.message;
+    if (payload?.error && error?.response?.status === 400) {
+        return "Invalid booking data. Please check resource, date, and time.";
+    }
     return fallback;
+}
+
+function getLocalDateString(date = new Date()) {
+    const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+    return localDate.toISOString().slice(0, 10);
+}
+
+function toTotalMinutes(timeText) {
+    if (!timeText) return null;
+    const [hourText, minuteText] = String(timeText).split(":");
+    const hours = Number(hourText);
+    const minutes = Number(minuteText);
+    if (Number.isNaN(hours) || Number.isNaN(minutes)) return null;
+    return (hours * 60) + minutes;
 }
 
 function safeFormatDate(dateText) {
@@ -58,7 +82,6 @@ export default function Booking() {
 
     // New Booking Flow State
     const [selectedResourceId, setSelectedResourceId] = useState(location.state?.resourceId || "");
-    const [bookingDate, setBookingDate] = useState(new Date().toISOString().slice(0, 10));
     const [checkingAvailability, setCheckingAvailability] = useState(false);
     const [resourceAvailability, setResourceAvailability] = useState(null);
     const [selectedSlot, setSelectedSlot] = useState(null);
@@ -69,6 +92,7 @@ export default function Booking() {
     const [useManualTime, setUseManualTime] = useState(false);
     const [manualStartTime, setManualStartTime] = useState("09:00");
     const [manualEndTime, setManualEndTime] = useState("10:00");
+    const [bookingDate, setBookingDate] = useState(getLocalDateString());
 
     const roleLabel = useMemo(() => normalizeRole(profileData?.role) || "USER", [profileData]);
     const isAdmin = roleLabel === "ADMIN";
@@ -119,10 +143,45 @@ export default function Booking() {
     }, [selectedResourceId, bookingDate]);
 
     const handleCreateBooking = async () => {
+        const today = getLocalDateString();
         const finalStartTime = useManualTime ? `${manualStartTime}:00` : selectedSlot?.startTime;
         const finalEndTime = useManualTime ? `${manualEndTime}:00` : selectedSlot?.endTime;
+        const startMinutes = toTotalMinutes(finalStartTime);
+        const endMinutes = toTotalMinutes(finalEndTime);
 
-        if (!bookingTitle || (!useManualTime && !selectedSlot)) return;
+        if (!selectedResourceId) {
+            setNotice({ type: "error", text: "Please select a resource." });
+            return;
+        }
+
+        if (!bookingTitle.trim()) {
+            setNotice({ type: "error", text: "Please enter a booking title." });
+            return;
+        }
+
+        if (!useManualTime && !selectedSlot) {
+            setNotice({ type: "error", text: "Please select an available time slot." });
+            return;
+        }
+
+        if (!bookingDate || bookingDate < today) {
+            setNotice({ type: "error", text: "Booking date cannot be in the past." });
+            return;
+        }
+
+        if (startMinutes === null || endMinutes === null || endMinutes <= startMinutes) {
+            setNotice({ type: "error", text: "End time must be after start time." });
+            return;
+        }
+
+        if (bookingDate === today) {
+            const now = new Date();
+            const nowMinutes = (now.getHours() * 60) + now.getMinutes();
+            if (startMinutes <= nowMinutes) {
+                setNotice({ type: "error", text: "For today, start time must be in the future." });
+                return;
+            }
+        }
 
         try {
             setSubmitting(true);
@@ -296,7 +355,12 @@ export default function Booking() {
                                 </div>
                                 <div className="form-group">
                                     <span>Date</span>
-                                    <input type="date" value={bookingDate} onChange={e => setBookingDate(e.target.value)} />
+                                    <input
+                                        type="date"
+                                        value={bookingDate}
+                                        min={getLocalDateString()}
+                                        onChange={e => setBookingDate(e.target.value)}
+                                    />
                                 </div>
                             </div>
 
