@@ -416,6 +416,8 @@ export default function Settings() {
     const profileImage = buildAssetUrl(user.profileImageUrl);
     const coverImage = buildAssetUrl(user.coverImageUrl);
     const initials = (user.firstName?.[0] || "U").toUpperCase();
+    const profileFileName = profileFile?.name || "No file selected";
+    const coverFileName = coverFile?.name || "No file selected";
 
     return (
         <div className="page-shell settings-page">
@@ -780,56 +782,70 @@ export default function Settings() {
                         <div className="settings-card-head">
                             <div>
                                 <h3>Profile Images</h3>
-                                <p className="muted">Upload profile and cover images.</p>
+                                <p className="muted">Use a clear profile photo and a clean cover image.</p>
                             </div>
                         </div>
 
                         <div className="upload-grid">
                             <div className="upload-card">
-                                <div className="image-preview">
+                                <div className="upload-card-head">
+                                    <h4>Profile Photo</h4>
+                                    <p>Recommended: square image (1:1), JPG/PNG.</p>
+                                </div>
+                                <div className="image-preview profile-photo">
                                     {user.profileImageUrl ? (
                                         <img src={buildAssetUrl(user.profileImageUrl)} alt="Profile preview" />
                                     ) : (
                                         <span>No profile image</span>
                                     )}
                                 </div>
-                                <input
-                                    className="file-input"
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(event) => setProfileFile(event.target.files?.[0] || null)}
-                                />
+                                <div className="file-input-row">
+                                    <input
+                                        className="file-input"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(event) => setProfileFile(event.target.files?.[0] || null)}
+                                    />
+                                    <span className="file-name">{profileFileName}</span>
+                                </div>
                                 <button
-                                    className="btn btn-secondary"
+                                    className="btn btn-primary"
                                     type="button"
                                     onClick={() => uploadImage("profile")}
                                     disabled={working}
                                 >
-                                    Upload Profile Image
+                                    Save Profile Photo
                                 </button>
                             </div>
 
                             <div className="upload-card">
-                                <div className="image-preview cover">
+                                <div className="upload-card-head">
+                                    <h4>Cover Photo</h4>
+                                    <p>Recommended: wide image (16:5), JPG/PNG.</p>
+                                </div>
+                                <div className="image-preview cover-photo">
                                     {user.coverImageUrl ? (
                                         <img src={buildAssetUrl(user.coverImageUrl)} alt="Cover preview" />
                                     ) : (
                                         <span>No cover image</span>
                                     )}
                                 </div>
-                                <input
-                                    className="file-input"
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(event) => setCoverFile(event.target.files?.[0] || null)}
-                                />
+                                <div className="file-input-row">
+                                    <input
+                                        className="file-input"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(event) => setCoverFile(event.target.files?.[0] || null)}
+                                    />
+                                    <span className="file-name">{coverFileName}</span>
+                                </div>
                                 <button
-                                    className="btn btn-secondary"
+                                    className="btn btn-primary"
                                     type="button"
                                     onClick={() => uploadImage("cover")}
                                     disabled={working}
                                 >
-                                    Upload Cover Image
+                                    Save Cover Photo
                                 </button>
                             </div>
                         </div>

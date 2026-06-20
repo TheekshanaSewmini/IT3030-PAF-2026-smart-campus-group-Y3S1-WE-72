@@ -14,7 +14,6 @@ import api from "../../api";
 import heroImage from "../../assets/hero.png";
 import styles from "./AuthUi.module.css";
 
-const roleOptions = ["USER", "ADMIN", "TECHNICIAN"];
 const yearOptions = ["FIRST", "SECOND", "THIRD", "FOURTH"];
 const semesterOptions = ["SEM1", "SEM2"];
 
@@ -27,7 +26,6 @@ export default function Signup() {
         email: "",
         tempEmail: "",
         phoneNumber: "",
-        role: "USER",
         year: "FIRST",
         semester: "SEM1",
         password: "",
@@ -75,7 +73,7 @@ export default function Signup() {
                 email: form.email.trim(),
                 tempEmail: form.tempEmail.trim(),
                 phoneNumber: form.phoneNumber.trim(),
-                role: form.role,
+                role: "USER",
                 year: form.year,
                 semester: form.semester,
                 password: form.password,
@@ -215,23 +213,6 @@ export default function Signup() {
                                         onChange={handleChange}
                                         required
                                     />
-                                </div>
-                            </label>
-
-                            <label className={styles.field}>
-                                <span className={styles.label}>Role</span>
-                                <div className={styles.inputWrap}>
-                                    <HiAcademicCap className={styles.inputIcon} size={18} />
-                                    <select
-                                        className={`${styles.select} ${styles.inputPadded}`}
-                                        name="role"
-                                        value={form.role}
-                                        onChange={handleChange}
-                                    >
-                                        {roleOptions.map((option) => (
-                                            <option key={option} value={option}>{option}</option>
-                                        ))}
-                                    </select>
                                 </div>
                             </label>
 

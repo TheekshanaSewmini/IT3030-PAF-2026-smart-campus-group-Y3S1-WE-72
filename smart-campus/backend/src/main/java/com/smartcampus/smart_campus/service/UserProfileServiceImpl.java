@@ -12,8 +12,10 @@ import com.smartcampus.smart_campus.repo.UserRepo;
 import com.smartcampus.smart_campus.utils.EmailUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.Optional;
@@ -154,10 +156,19 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Override
     public UserDto.UpdateEmailDto updateEmail(User user, UserDto.UpdateEmailDto dto) {
 
-        String newEmail = dto.newEmail();
+        String newEmail = dto.newEmail().trim();
 
-        if (userRepo.findByEmailIgnoreCase(newEmail).isPresent()) {
-            throw new RuntimeException("Email already in use");
+        if (newEmail.equalsIgnoreCase(user.getEmail())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "New email must be different from current email"
+            );
+        }
+
+        Optional<User> existingUser = userRepo.findByEmailIgnoreCase(newEmail);
+        if (existingUser.isPresent()
+                && !existingUser.get().getUserId().equals(user.getUserId())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
 
         int otp = new Random().nextInt(900000) + 100000;
