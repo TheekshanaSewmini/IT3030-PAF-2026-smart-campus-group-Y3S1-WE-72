@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class JwtUtils {
 
-    @Value("${spring.jwt.secret:Y2hhbGxlbmdlVG9Xcml0ZUZ1bGxQcmVkaWN0YWJsZVNlY3JldEtleQ==}")
+    @Value("${spring.jwt.secret:}")
     private String secretKey;
 
     @Value("${spring.cookie.secure:false}")
@@ -121,7 +121,15 @@ public class JwtUtils {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        if (secretKey == null || secretKey.isBlank()) {
+            throw new IllegalStateException("Configure spring.jwt.secret with a Base64-encoded 256-bit key.");
+        }
+
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey.trim());
+        if (keyBytes.length < 32) {
+            throw new IllegalStateException("spring.jwt.secret must decode to at least 256 bits.");
+        }
+
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
