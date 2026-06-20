@@ -2,6 +2,8 @@ package com.smartcampus.smart_campus.security;
 
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -35,7 +37,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(
             HttpSecurity http,
-            OAuth2AuthorizationRequestResolver oauth2AuthorizationRequestResolver
+            ObjectProvider<OAuth2AuthorizationRequestResolver> oauth2AuthorizationRequestResolverProvider
     ) throws Exception {
 
         http
@@ -84,9 +86,13 @@ public class SecurityConfig {
 
                 .authenticationProvider(authenticationProvider)
 
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-                .oauth2Login(oauth -> oauth
+        OAuth2AuthorizationRequestResolver oauth2AuthorizationRequestResolver =
+                oauth2AuthorizationRequestResolverProvider.getIfAvailable();
+
+        if (oauth2AuthorizationRequestResolver != null) {
+            http.oauth2Login(oauth -> oauth
                         .authorizationEndpoint(authorization -> authorization
                                 .authorizationRequestResolver(oauth2AuthorizationRequestResolver)
                         )
@@ -95,11 +101,13 @@ public class SecurityConfig {
                         )
                         .successHandler(oAuth2SuccessHandler)
                 );
+        }
 
         return http.build();
     }
 
     @Bean
+    @ConditionalOnBean(ClientRegistrationRepository.class)
     public OAuth2AuthorizationRequestResolver oauth2AuthorizationRequestResolver(
             ClientRegistrationRepository clientRegistrationRepository
     ) {
