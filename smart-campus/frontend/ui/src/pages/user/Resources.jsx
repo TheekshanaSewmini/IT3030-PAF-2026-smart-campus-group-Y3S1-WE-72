@@ -2,7 +2,18 @@ import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import api, { resourceApi } from "../../api";
 import AppNavbar from "../../components/AppNavbar";
-import { HiSearch, HiFilter, HiLocationMarker, HiUsers, HiClock, HiCheckCircle, HiXCircle, HiAcademicCap, HiCube } from "react-icons/hi";
+import { 
+    HiSearch, 
+    HiFilter, 
+    HiLocationMarker, 
+    HiUsers, 
+    HiCheckCircle, 
+    HiX, 
+    HiAcademicCap, 
+    HiCube, 
+    HiRefresh 
+} from "react-icons/hi";
+import styles from "./Resources.module.css";
 
 function getErrorMessage(error, fallback) {
     const payload = error?.response?.data;
@@ -48,10 +59,10 @@ export default function Resources() {
             try {
                 const [resResp, profResp] = await Promise.all([
                     resourceApi.getAll(),
-                    api.get("/user/me"),
+                    api.get("/auth/me"),
                 ]);
                 setResources(Array.isArray(resResp.data) ? resResp.data : []);
-                setProfileData(profResp.data);
+                setProfileData(profResp.data?.user || profResp.data);
             } catch (err) {
                 if (err.response?.status === 401) navigate("/login");
                 else setError(getErrorMessage(err, "Catalog unavailable."));
@@ -64,7 +75,8 @@ export default function Resources() {
 
     const filteredResources = useMemo(() => {
         return resources.filter((res) => {
-            const matchesSearch = res.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            const matchesSearch = 
+                res.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 res.location.toLowerCase().includes(searchTerm.toLowerCase());
             const matchesType = !selectedType || res.type === selectedType;
             const matchesStatus = !selectedStatus || res.status === selectedStatus;
@@ -72,166 +84,208 @@ export default function Resources() {
         });
     }, [resources, searchTerm, selectedType, selectedStatus]);
 
-    if (loading) return <div className="loading-center"><div className="spinner" /></div>;
-
-    const getStatusStyle = (status) => {
+    const getStatusConfig = (status) => {
         switch(status) {
-            case 'ACTIVE': return { color: '#10b981', label: 'Available' };
-            case 'MAINTENANCE': return { color: '#f59e0b', label: 'Maintenance' };
-            case 'UNAVAILABLE': return { color: '#ef4444', label: 'Unavailable' };
-            default: return { color: '#64748b', label: formatEnumLabel(status) };
+            case 'ACTIVE': return { color: '#10b981', label: 'Available', dot: '#10b981' };
+            case 'MAINTENANCE': return { color: '#f59e0b', label: 'Maintenance', dot: '#f59e0b' };
+            case 'UNAVAILABLE': return { color: '#ef4444', label: 'Unavailable', dot: '#ef4444' };
+            default: return { color: '#64748b', label: formatEnumLabel(status), dot: '#94a3b8' };
         }
     };
 
+    if (loading) return (
+        <div className="loading-center">
+            <div className={styles.texture} />
+            <div className="spinner" />
+        </div>
+    );
+
     return (
-        <div className="page-shell">
-            <div className="bg-layer bg-user" />
-            <div className="panel page-panel">
+        <div className={styles.page}>
+            <div className={styles.texture} />
+            
+            <div className={styles.container}>
                 <AppNavbar 
-                    title="Resource Directory" 
-                    subtitle="Explore campus facilities and hardware assets."
+                    title="Resources" 
+                    subtitle="Management System"
                     profile={profileData} 
                 />
 
-                <main className="dashboard-content" style={{ padding: '0 1.5rem 2.5rem' }}>
-                    {error && <div className="message error glass-alert">{error}</div>}
+                <header className={styles.header}>
+                    <div className={styles.titleRow}>
+                        <h1>Resource Directory</h1>
+                    </div>
+                    <p className={styles.subtitle}>Explore and discover campus facilities, labs, and equipment assets.</p>
+                </header>
 
-                    {/* Filter Bar */}
-                    <section className="glass-panel" style={{ padding: '1.5rem', marginBottom: '2rem', display: 'flex', flexWrap: 'wrap', gap: '1.25rem', alignItems: 'flex-end', background: 'rgba(255,255,255,0.7)' }}>
-                        <div style={{ flex: '1', minWidth: '240px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: 'var(--text-soft)', fontWeight: 600, fontSize: '0.85rem' }}>
-                                <HiSearch /> Search Name or Location
-                            </div>
+                {error && <div className="message error glass-alert">{error}</div>}
+
+                <section className={styles.filterBar}>
+                    <div className={styles.inputGroup}>
+                        <label className={styles.label}><HiSearch /> Search</label>
+                        <div className={styles.searchWrapper}>
+                            <HiSearch className={styles.searchIcon} />
                             <input 
-                                className="search-input" 
+                                className={styles.searchInput}
                                 value={searchTerm} 
                                 onChange={e => setSearchTerm(e.target.value)}
-                                placeholder="e.g. Science Block, Projector..."
-                                style={{ background: '#fff', borderRadius: '12px' }}
+                                placeholder="Search by name or location..."
                             />
                         </div>
-                        <div style={{ width: '180px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: 'var(--text-soft)', fontWeight: 600, fontSize: '0.85rem' }}>
-                                <HiFilter /> Type
-                            </div>
-                            <select value={selectedType} onChange={e => setSelectedType(e.target.value)} style={{ background: '#fff', borderRadius: '12px' }}>
-                                <option value="">All Types</option>
-                                {FACILITY_TYPES.map(t => <option key={t} value={t}>{formatEnumLabel(t)}</option>)}
-                            </select>
-                        </div>
-                        <div style={{ width: '180px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: 'var(--text-soft)', fontWeight: 600, fontSize: '0.85rem' }}>
-                                <HiCheckCircle /> Availability States
-                            </div>
-                            <select value={selectedStatus} onChange={e => setSelectedStatus(e.target.value)} style={{ background: '#fff', borderRadius: '12px' }}>
-                                <option value="">All Status</option>
-                                {FACILITY_STATUSES.map(s => <option key={s} value={s}>{formatEnumLabel(s)}</option>)}
-                            </select>
-                        </div>
-                        <button className="btn btn-ghost" onClick={() => { setSearchTerm(""); setSelectedType(""); setSelectedStatus(""); }} style={{ height: '46px', borderRadius: '12px' }}>
-                            Reset
-                        </button>
-                    </section>
-
-                    {/* Results Header */}
-                    <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <p style={{ margin: 0, fontWeight: 700, color: 'var(--text-soft)' }}>
-                            Found <span style={{ color: 'var(--brand)' }}>{filteredResources.length}</span> matching assets
-                        </p>
                     </div>
 
-                    {/* Resource Grid */}
-                    <div className="resource-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
-                        {filteredResources.map(res => {
-                            const statusInfo = getStatusStyle(res.status);
-                            return (
-                                <article 
-                                    key={res.id} 
-                                    className="resource-card glass-card clickable-card" 
-                                    onClick={() => { setSelectedResource(res); setShowModal(true); }}
-                                    style={{ overflow: 'hidden', cursor: 'pointer', transition: 'transform 0.2s ease', maxWidth: '400px' }}
-                                >
-                                    <div style={{ height: '180px', position: 'relative' }}>
-                                        {res.imageUrl ? (
-                                            <img src={buildAssetUrl(res.imageUrl)} alt={res.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        ) : (
-                                            <div style={{ width: '100%', height: '100%', background: '#cbd5e1', display: 'grid', placeItems: 'center' }}>
-                                                <HiCube size={32} style={{ opacity: 0.2 }} />
-                                            </div>
-                                        )}
-                                        <div style={{ position: 'absolute', top: '1rem', left: '1rem', background: 'rgba(255,255,255,0.9)', padding: '0.3rem 0.8rem', borderRadius: '999px', fontSize: '0.7rem', fontWeight: 800, color: 'var(--brand)', textTransform: 'uppercase', backdropFilter: 'blur(4px)' }}>
-                                            {formatEnumLabel(res.type)}
-                                        </div>
-                                    </div>
-                                    <div style={{ padding: '1.25rem' }}>
-                                        <h4 style={{ margin: '0 0 0.5rem', fontSize: '1.1rem', fontWeight: 800 }}>{res.name}</h4>
-                                        <p style={{ margin: '0 0 1rem', fontSize: '0.85rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                                            <HiLocationMarker /> {res.location}
-                                        </p>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid var(--line-soft)' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', fontWeight: 600, color: '#64748b' }}>
-                                                <HiUsers /> {res.capacity} Seats
-                                            </div>
-                                            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: statusInfo.color }}>
-                                                {statusInfo.label}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </article>
-                            );
-                        })}
+                    <div className={styles.inputGroup}>
+                        <label className={styles.label}><HiFilter /> Category</label>
+                        <select 
+                            className={styles.select}
+                            value={selectedType} 
+                            onChange={e => setSelectedType(e.target.value)}
+                        >
+                            <option value="">All Categories</option>
+                            {FACILITY_TYPES.map(t => <option key={t} value={t}>{formatEnumLabel(t)}</option>)}
+                        </select>
                     </div>
 
-                    {filteredResources.length === 0 && (
-                        <div className="glass-panel" style={{ padding: '5rem', textAlign: 'center', color: '#64748b' }}>
-                            <HiSearch size={48} style={{ opacity: 0.2, marginBottom: '1rem' }} />
-                            <h3>No matches found</h3>
-                            <p>Try adjusting your search terms or filters.</p>
-                        </div>
-                    )}
-                </main>
+                    <div className={styles.inputGroup}>
+                        <label className={styles.label}><HiCheckCircle /> Availability</label>
+                        <select 
+                            className={styles.select}
+                            value={selectedStatus} 
+                            onChange={e => setSelectedStatus(e.target.value)}
+                        >
+                            <option value="">Any Status</option>
+                            {FACILITY_STATUSES.map(s => <option key={s} value={s}>{formatEnumLabel(s)}</option>)}
+                        </select>
+                    </div>
+
+                    <button className={styles.resetBtn} onClick={() => { setSearchTerm(""); setSelectedType(""); setSelectedStatus(""); }}>
+                        <HiRefresh style={{ marginRight: '0.4rem' }} /> Reset
+                    </button>
+                </section>
+
+                <div className={styles.resultsInfo}>
+                    Showing <span className={styles.count}>{filteredResources.length}</span> resources found in campus
+                </div>
+
+                <div className={styles.grid}>
+                    {filteredResources.map(res => {
+                        const status = getStatusConfig(res.status);
+                        return (
+                            <article 
+                                key={res.id} 
+                                className={styles.card}
+                                onClick={() => { setSelectedResource(res); setShowModal(true); }}
+                            >
+                                <div className={styles.cardImage}>
+                                    {res.imageUrl ? (
+                                        <img src={buildAssetUrl(res.imageUrl)} alt={res.name} className={styles.image} />
+                                    ) : (
+                                        <div className={styles.imagePlaceholder}>
+                                            <HiCube size={48} />
+                                        </div>
+                                    )}
+                                    <div className={styles.typeBadge}>{formatEnumLabel(res.type)}</div>
+                                </div>
+                                <div className={styles.cardBody}>
+                                    <h3>{res.name}</h3>
+                                    <div className={styles.location}>
+                                        <HiLocationMarker /> {res.location}
+                                    </div>
+                                    <div className={styles.cardFooter}>
+                                        <div className={styles.stat}>
+                                            <HiUsers /> {res.capacity} Seats
+                                        </div>
+                                        <div className={styles.statusIndicator} style={{ color: status.color }}>
+                                            <div className={styles.dot} style={{ background: status.dot }} />
+                                            {status.label}
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        );
+                    })}
+                </div>
+
+                {filteredResources.length === 0 && (
+                    <div className={styles.emptyState}>
+                        <HiSearch size={64} className={styles.emptyIcon} />
+                        <h3>No Resources Found</h3>
+                        <p>We couldn't find any resources matching your current search or filters.</p>
+                    </div>
+                )}
             </div>
 
-            {/* Detail Modal */}
+            {/* FULL DISPLAY RESOURCE DETAIL */}
             {showModal && selectedResource && (
-                <div className="modern-modal-overlay" onClick={() => setShowModal(false)}>
-                    <div className="modern-modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px' }}>
-                        <div className="modal-header">
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                <div style={{ background: 'var(--brand-soft)', color: 'var(--brand)', padding: '0.75rem', borderRadius: '12px' }}><HiAcademicCap size={24} /></div>
-                                <div>
-                                    <h3 style={{ margin: 0 }}>{selectedResource.name}</h3>
-                                    <p className="muted" style={{ margin: 0 }}>Asset ID: #{selectedResource.id}</p>
-                                </div>
-                            </div>
-                            <button className="close-modal-btn" onClick={() => setShowModal(false)}><HiXCircle size={24} /></button>
+                <div className={styles.detailOverlay}>
+                    <header className={styles.detailHeader}>
+                        <button className={styles.backBtn} onClick={() => setShowModal(false)}>
+                            <HiArrowRight style={{ transform: 'rotate(180deg)' }} /> Back to Directory
+                        </button>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <span style={{ color: '#94a3b8', fontSize: '0.9rem', fontWeight: 600 }}>Smart Campus Asset Management</span>
+                            <HiAcademicCap size={24} style={{ color: '#2563eb' }} />
                         </div>
-                        
-                        <div style={{ padding: '0 2rem 2rem' }}>
-                            <div style={{ height: '260px', borderRadius: '16px', overflow: 'hidden', marginBottom: '2rem', border: '1px solid var(--line-soft)' }}>
+                    </header>
+
+                    <main className={styles.detailMain}>
+                        <div className={styles.detailCard}>
+                            <div className={styles.detailImageSection}>
                                 {selectedResource.imageUrl ? (
-                                    <img src={buildAssetUrl(selectedResource.imageUrl)} alt={selectedResource.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <img src={buildAssetUrl(selectedResource.imageUrl)} alt={selectedResource.name} className={styles.detailImage} />
                                 ) : (
-                                    <div style={{ width: '100%', height: '100%', background: '#f1f5f9', display: 'grid', placeItems: 'center' }}>No Preview Available</div>
+                                    <div className={styles.imagePlaceholder}>
+                                        <HiCube size={120} />
+                                    </div>
                                 )}
+                                <div className={styles.imageOverlay} />
+                                <div className={styles.detailBadge}>{formatEnumLabel(selectedResource.type)}</div>
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-                                <div className="info-block">
-                                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-soft)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Type & Class</label>
-                                    <p style={{ margin: 0, fontWeight: 700 }}>{formatEnumLabel(selectedResource.type)}</p>
+                            <div className={styles.detailInfoSection}>
+                                <span className={styles.detailId}>RESOURCE ID: #{selectedResource.id}</span>
+                                <h2 className={styles.detailTitle}>{selectedResource.name}</h2>
+                                
+                                <div 
+                                    className={styles.statusPill} 
+                                    style={{ 
+                                        background: `${getStatusConfig(selectedResource.status).dot}15`, 
+                                        color: getStatusConfig(selectedResource.status).color 
+                                    }}
+                                >
+                                    <div className={styles.dot} style={{ background: getStatusConfig(selectedResource.status).dot }} />
+                                    {getStatusConfig(selectedResource.status).label}
                                 </div>
-                                <div className="info-block">
-                                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-soft)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Capacity</label>
-                                    <p style={{ margin: 0, fontWeight: 700 }}>{selectedResource.capacity} Person Max</p>
+
+                                <div className={styles.infoBlockGrid}>
+                                    <div className={styles.infoBlock}>
+                                        <span className={styles.infoLabel}>Campus Location</span>
+                                        <span className={styles.infoValue}>{selectedResource.location}</span>
+                                    </div>
+                                    <div className={styles.infoBlock}>
+                                        <span className={styles.infoLabel}>Max Capacity</span>
+                                        <span className={styles.infoValue}>{selectedResource.capacity} Person(s)</span>
+                                    </div>
+                                    <div className={styles.infoBlock}>
+                                        <span className={styles.infoLabel}>Available Hours</span>
+                                        <span className={styles.infoValue}>
+                                            {selectedResource.availableFrom?.slice(0, 5)} - {selectedResource.availableTo?.slice(0, 5)}
+                                        </span>
+                                    </div>
+                                    <div className={styles.infoBlock}>
+                                        <span className={styles.infoLabel}>Status Category</span>
+                                        <span className={styles.infoValue}>{formatEnumLabel(selectedResource.status)}</span>
+                                    </div>
                                 </div>
-                                <div className="info-block">
-                                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-soft)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Location</label>
-                                    <p style={{ margin: 0, fontWeight: 700 }}>{selectedResource.location}</p>
-                                </div>
-                                <div className="info-block">
-                                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-soft)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Service Hours</label>
-                                    <p style={{ margin: 0, fontWeight: 700 }}>{selectedResource.availableFrom?.slice(0, 5)} - {selectedResource.availableTo?.slice(0, 5)}</p>
+
+                                <div className={styles.detailActions}>
+                                    <button 
+                                        className={styles.bookBtn} 
+                                        onClick={() => navigate("/booking")} 
+                                        disabled={selectedResource.status !== 'ACTIVE'}
+                                    >
+                                        {selectedResource.status === 'ACTIVE' ? "Proceed to Booking" : "Currently Unavailable"}
+                                    </button>
                                 </div>
                             </div>
                         </div>

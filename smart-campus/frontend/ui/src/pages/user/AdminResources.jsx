@@ -150,27 +150,9 @@ export default function AdminResources() {
 
             const formData = new FormData();
             formData.append("resource", new Blob([JSON.stringify(payload)], { type: "application/json" }));
-            if (imageFile) formData.append("image", imageFile);
+            formData.append("image", imageFile);
 
-            let response;
-            if (editingId) {
-                response = await api.put(`/facilities/${editingId}`, formData, {
-                    headers: { "Content-Type": "multipart/form-data" },
-                });
-                setResources(curr => curr.map(r => r.id === editingId ? response.data : r));
-                setSuccess("Resource updated successfully!");
-            } else {
-                if (!imageFile) {
-                    setError("Resource image is required for new entries.");
-                    setSubmitting(false);
-                    return;
-                }
-                response = await api.post("/facilities", formData, {
-                    headers: { "Content-Type": "multipart/form-data" },
-                });
-                setResources(curr => [response.data, ...curr]);
-                setSuccess("Resource cataloged successfully!");
-            }
+            const response = await api.post("/facilities", formData);
 
             setForm(initialForm);
             setImageFile(null);

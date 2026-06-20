@@ -100,12 +100,8 @@ export const resourceApi = {
     getAll: () => api.get("/facilities"),
     getById: (id) => api.get(`/facilities/${id}`),
     search: (params) => api.get("/facilities", { params }),
-    create: (formData) => api.post("/facilities", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-    }),
-    update: (id, formData) => api.put(`/facilities/${id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-    }),
+    create: (formData) => api.post("/facilities", formData),
+    update: (id, formData) => api.put(`/facilities/${id}`, formData),
     updateStatus: (id, status) => api.patch(`/facilities/${id}/status`, null, {
         params: { status },
     }),

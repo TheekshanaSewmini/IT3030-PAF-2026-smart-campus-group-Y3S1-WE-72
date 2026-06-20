@@ -50,9 +50,9 @@ select {
 .page-shell,
 .login-page {
     min-height: 100vh;
-    padding: 2rem 1.2rem;
+    padding: 1.25rem;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .bg-layer,
@@ -93,9 +93,11 @@ select {
 }
 
 .page-panel {
-    max-width: 1080px;
+    width: 100%;
+    max-width: 1540px;
     margin: 0 auto;
-    padding: 1.2rem;
+    padding: 1.5rem;
+    min-height: calc(100vh - 2.5rem);
 }
 
 .auth-card {
@@ -129,7 +131,7 @@ select {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: min(1200px, 100%);
+    width: 100%;
 }
 
 .brand-section .brand-logo {

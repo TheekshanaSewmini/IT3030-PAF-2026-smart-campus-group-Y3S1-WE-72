@@ -4,6 +4,7 @@ import api, { bookingApi, resourceApi } from "../../api";
 import AppNavbar from "../../components/AppNavbar";
 import { HiSearch, HiCheckCircle, HiXCircle, HiClock, HiCheck, HiX, HiTrash, HiClipboardList, HiShieldExclamation, HiBell, HiCalendar, HiPlus, HiAcademicCap, HiSparkles, HiLightningBolt } from "react-icons/hi";
 import { normalizeRole } from "../../utils/roleHome";
+import styles from "./Booking.module.css";
 
 function getErrorMessage(error, fallback) {
     const payload = error?.response?.data;
@@ -40,7 +41,7 @@ function safeFormatDate(dateText) {
     try {
         if (!dateText) return "-";
         const parsed = new Date(`${dateText}T00:00:00`);
-        return parsed.toLocaleDateString();
+        return parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     } catch { return String(dateText); }
 }
 
@@ -100,16 +101,20 @@ export default function Booking() {
     const loadData = async () => {
         try {
             const [p, m, r] = await Promise.all([
-                api.get("/user/me"), 
+                api.get("/auth/me"), 
                 bookingApi.getMy(), 
                 resourceApi.getAll()
             ]);
             
+            const user = p.data?.user || p.data;
+            setProfileData(user);
+            setMyBookings(Array.isArray(m.data) ? m.data : []);
+            setResources(Array.isArray(r.data) ? r.data : []);
             setProfileData(p.data);
             setMyBookings(m.data);
             setResources(r.data);
 
-            if (normalizeRole(p.data?.role) === "ADMIN") {
+            if (normalizeRole(user?.role) === "ADMIN") {
                 const [pn, al] = await Promise.all([bookingApi.getPending(), bookingApi.getAll()]);
                 setPendingBookings(pn.data);
                 setAllBookings(al.data);
@@ -124,6 +129,9 @@ export default function Booking() {
 
     useEffect(() => { loadData(); }, []);
 
+    const handleCheckAvailability = async () => {
+        if (!selectedResourceId || !bookingDate) {
+            setNotice({ type: "error", text: "Please select both resource and date." });
     useEffect(() => {
         const autoCheck = async () => {
             if (selectedResourceId && bookingDate) {
@@ -219,7 +227,12 @@ export default function Booking() {
         }
     };
 
-    if (loading) return <div className="loading-center"><div className="spinner" /></div>;
+    if (loading) return (
+        <div className="loading-center">
+            <div className={styles.texture} />
+            <div className="spinner" />
+        </div>
+    );
 
     const stats = {
         pending: isAdmin ? pendingBookings.length : myBookings.filter(b => b.status === 'PENDING').length,
@@ -232,7 +245,7 @@ export default function Booking() {
             <div className="panel page-panel border-none">
                 <AppNavbar title="Global Logistics" subtitle="Manage resource allocation streams." profile={profileData} />
 
-                <main className="dashboard-content" style={{ padding: '0 1.5rem 2.5rem' }}>
+                <main>
                     {error && <div className="message error glass-alert">{error}</div>}
                     {notice.text && <div className={`message ${notice.type} glass-alert`}>{notice.text}</div>}
 
@@ -341,8 +354,23 @@ export default function Booking() {
                                 <h3 style={{ margin: 0 }}>Resource Allocation</h3>
                                 <p className="muted" style={{ margin: 0 }}>Configure session parameters.</p>
                             </div>
-                            <button className="close-modal-btn" onClick={() => setIsFormOpen(false)}><HiX size={24} /></button>
                         </div>
+                        <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#94a3b8', fontSize: '0.85rem' }}>
+                            <HiOutlineInformationCircle size={20} />
+                            <span>Your request will be sent to the department admin for approval.</span>
+                        </div>
+                    </aside>
+
+                    <main className={styles.formMain}>
+                        <button className={styles.closeForm} onClick={() => setIsFormOpen(false)}>
+                            <HiX size={24} />
+                        </button>
+
+                        <div className={styles.formContent}>
+                            <header className={styles.formTitle}>
+                                <h3>New Reservation</h3>
+                                <p>Provide details to verify real-time availability.</p>
+                            </header>
 
                         <div className="modal-body" style={{ padding: '0 2rem 2.5rem' }}>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', marginBottom: '2rem' }}>
@@ -362,6 +390,19 @@ export default function Booking() {
                                         onChange={e => setBookingDate(e.target.value)}
                                     />
                                 </div>
+                                
+                                <button 
+                                    className={styles.verifyBtn} 
+                                    onClick={handleCheckAvailability} 
+                                    disabled={checkingAvailability || !selectedResourceId}
+                                >
+                                    {checkingAvailability ? (
+                                        <HiClock className="spin" />
+                                    ) : (
+                                        <HiSearch />
+                                    )}
+                                    {checkingAvailability ? "Synchronizing..." : "Check Availability"}
+                                </button>
                             </div>
 
                             {isAdmin && (
@@ -422,7 +463,7 @@ export default function Booking() {
                                 {submitting ? "Processing..." : "Confirm & Commit"}
                             </button>
                         </div>
-                    </div>
+                    </main>
                 </div>
             )}
         </div>
